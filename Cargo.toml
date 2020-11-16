@@ -1,0 +1,15 @@
+[package]
+name = "sd-id128"
+version = "0.1.0"
+authors = ["ente <ente@ck76.de>"]
+edition = "2018"
+description = "An API to sd-id128 as used by sd-journal."
+readme = "README.md"
+repository = "https://gitlab.com/systemd.rs/sdID128"
+license = "AGPL-3.0-or-later"
+keywords = ["systemd", "sd-journal", "sd-id128", "sdID128"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sd-sys = {path = "../sd-sys"}
