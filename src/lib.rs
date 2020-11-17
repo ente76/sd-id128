@@ -451,7 +451,7 @@ impl ID128 {
     /// Return Values:
     /// - `Ok(ID128)`: initialized ID128 struct
     /// - `Err(NulError)`: the source string did contain a 0-byte
-    /// - `Err(SDError)`: sd-id128 returned an error, the error code is included
+    /// - `Err(SDError)`: sd-id128 returned an error code
     pub fn from_str_sd(string: &str) -> Result<Self, Error> {
         let string = CString::new(string).map_err(Error::NullError)?;
         let mut id128 = ffi::sd_id128::default();
@@ -533,9 +533,16 @@ impl ID128 {
     /// This Rust native function offers the possibility to apply the same
     /// format tho: choose format "LibSystemD" and lower case.
     ///
-    /// The formatting default is in Rust native function to_string is:
+    /// The formatting default is in Rust native function to_string is RFC:
     /// 01234567-89ab-cdef-0123-456789abcdef. This is the official defined
     /// standard in RFC 4122.
+    ///
+    /// Parameters:
+    /// - Format: RFC, LibSystemD or Simple
+    /// - Case: whether hexadecimal letter shall be upper or lower case
+    ///
+    /// Return Values:
+    /// - String: text representation of the id
     pub fn to_string_formatted(&self, format: Format, case: Case) -> String {
         let s = self.value
                     .iter()
