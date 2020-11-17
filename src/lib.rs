@@ -544,33 +544,32 @@ impl ID128 {
     /// Return Values:
     /// - String: text representation of the id
     pub fn to_string_formatted(&self, format: Format, case: Case) -> String {
-        let s = self.value
-                    .iter()
-                    .enumerate()
-                    .map(move |(pos, digit)| {
-                        let dash = match format {
-                            Format::Simple => {
-                                if (pos + 1) % 2 == 0 && pos < 15 {
-                                    "-"
-                                } else {
-                                    ""
-                                }
-                            },
-                            Format::RFC => {
-                                if pos == 3 || pos == 5 || pos == 7 || pos == 9 {
-                                    "-"
-                                } else {
-                                    ""
-                                }
-                            },
-                            Format::LibSystemD => ""
-                        };
-                        match case {
-                            Case::Lower => format!("{:02x}{}", digit, dash),
-                            Case::Upper => format!("{:02X}{}", digit, dash)
+        self.value
+            .iter()
+            .enumerate()
+            .map(move |(pos, digit)| {
+                let dash = match format {
+                    Format::Simple => {
+                        if (pos + 1) % 2 == 0 && pos < 15 {
+                            "-"
+                        } else {
+                            ""
                         }
-                    })
-                    .collect::<String>();
-        s
+                    },
+                    Format::RFC => {
+                        if pos == 3 || pos == 5 || pos == 7 || pos == 9 {
+                            "-"
+                        } else {
+                            ""
+                        }
+                    },
+                    Format::LibSystemD => ""
+                };
+                match case {
+                    Case::Lower => format!("{:02x}{}", digit, dash),
+                    Case::Upper => format!("{:02X}{}", digit, dash)
+                }
+            })
+            .collect::<String>()
     }
 }
