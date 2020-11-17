@@ -9,7 +9,8 @@ sd-id128 is an alternative to systemd from the [systemd-rust](https://github.com
 
 ## License
 
-sd-id128: wrapper for sd-id128 of libsystemd
+sd-id128: a wrapper for sd-id128 of libsystemd
+
 Copyright (C) 2020 Christian Klaue [mail@ck76.de]
 
 This program is free software: you can redistribute it and/or modify

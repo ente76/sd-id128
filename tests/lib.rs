@@ -91,67 +91,67 @@ fn machine_id_hashed() {
 #[test]
 fn from_string_lower_libsystemd() {
     let parsed = ID128::from_str("0123456789abcdef0123456789abcdef").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[test]
 fn from_string_upper_libsystemd() {
     let parsed = ID128::from_str("0123456789ABCDEF0123456789ABCDEF").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[test]
 fn from_string_mixed_libsystemd() {
     let parsed = ID128::from_str("0123456789AbCdEf0123456789aBcDeF").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[allow(non_snake_case)]
 #[test]
 fn from_string_lower_RFC() {
     let parsed = ID128::from_str("01234567-89ab-cdef-0123-456789abcdef").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[allow(non_snake_case)]
 #[test]
 fn from_string_upper_RFC() {
     let parsed = ID128::from_str("01234567-89AB-CDEF-0123-456789ABCDEF").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[allow(non_snake_case)]
 #[test]
 fn from_string_mixed_RFC() {
     let parsed = ID128::from_str("01234567-89Ab-CdEf-0123-456789aBcDeF").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[test]
 fn from_string_lower_simple() {
     let parsed = ID128::from_str("0123-4567-89ab-cdef-0123-4567-89ab-cdef").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[test]
 fn from_string_upper_simple() {
     let parsed = ID128::from_str("0123-4567-89AB-CDEF-0123-4567-89AB-CDEF").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[test]
 fn from_string_mixed_simple() {
     let parsed = ID128::from_str("0123-4567-89Ab-CdEf-0123-4567-89aB-cDeF").unwrap();
-    assert_eq!(parsed.as_bytes(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
-                                    35, 69, 103, 137, 171, 205, 239]);
+    assert_eq!(parsed.as_ref(), &[1, 35, 69, 103, 137, 171, 205, 239, 1,
+                                  35, 69, 103, 137, 171, 205, 239]);
 }
 
 #[test]
@@ -273,5 +273,5 @@ fn from_string_sd_too_long_fails() {
 fn ffi_from_string_upper_eq_lower_case() {
     let upper = ID128::from_str_sd("1234567890ABCDEF1234567890ABCDEF").unwrap();
     let lower = ID128::from_str_sd("1234567890abcdef1234567890abcdef").unwrap();
-    assert_eq!(upper.as_bytes(), lower.as_bytes());
+    assert_eq!(upper.as_ref(), lower.as_ref());
 }

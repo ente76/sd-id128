@@ -18,7 +18,7 @@
 //!
 //! libsystemd offers the
 //! [API sd-id128](<https://www.freedesktop.org/software/systemd/man/sd-id128.html>)
-//! to UUIDs as defined in [RFC 3122](<https://tools.ietf.org/html/rfc4122>).
+//! to UUIDs as defined in [RFC 4122](<https://tools.ietf.org/html/rfc4122>).
 //! This crate offers ID128 as a wrapper around libsystemd based on FFI
 //! definitions in crate sd-sys.
 //!
@@ -45,7 +45,6 @@ use std::{convert::TryFrom,
 /// - from_string_sd: parse string into id using libsystemd
 ///
 /// Native Constructors -> Result<ID128, Error>
-/// - from_raw: new id based on raw [u8; 16]; always succeeds and returns ID128
 /// - from_string: parse string into id using native Rust
 /// - from_string_lax: parse string into id using native Rust with lax rules
 ///
@@ -56,7 +55,17 @@ use std::{convert::TryFrom,
 /// Native Method -> T
 /// - to_string: format an id as String in default format using native Rust
 /// - to_string_formatted: format an id as String using native Rust
-/// - as_bytes: return the raw value as &[u8; 16]
+///
+/// Implemented Traits
+/// - Display: provides `to_string(&ID128) -> String` and `format!(..., &ID128)`
+/// - From<ID128> -> String: provides `into(ID128) -> String`
+/// - TryFrom<String> -> ID128: provides `try_into(String) -> ID128'
+/// - From<ffi::sd_id128> -> ID128: provides `into(ffi::sd_id128) -> ID128`
+/// - From<ID128> -> ffi::sd_id128: provides `into(ID128) -> ffi::sd_id128`
+/// - AsRef<[u8; 16]>: provides `as_ref(&ID128) -> &[u8; 16]`
+/// - Clone: provides `clone(&ID128) -> ID128`
+/// - From<ID128> -> [u8; 16]: provides `into(ID128) -> [u8; 16]`
+/// - From<[u8; 16]> -> ID128: provides `into([u8; 16]) -> ID128`
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct ID128 {
     value: [u8; 16]
@@ -152,6 +161,36 @@ impl fmt::Display for ID128 {
     }
 }
 
+impl From<ID128> for ffi::sd_id128 {
+    fn from(id128: ID128) -> ffi::sd_id128 {
+        ffi::sd_id128 { value: id128.value }
+    }
+}
+
+impl From<ffi::sd_id128> for ID128 {
+    fn from(sd_id128: ffi::sd_id128) -> ID128 {
+        ID128 { value: sd_id128.value }
+    }
+}
+
+impl AsRef<[u8; 16]> for ID128 {
+    fn as_ref(&self) -> &[u8; 16] {
+        &self.value
+    }
+}
+
+impl From<ID128> for [u8; 16] {
+    fn from(id128: ID128) -> [u8; 16] {
+        id128.value
+    }
+}
+
+impl From<[u8; 16]> for ID128 {
+    fn from(value: [u8; 16]) -> ID128 {
+        ID128 { value }
+    }
+}
+
 impl ID128 {
     /// generates a new randomized 128-bit ID (`sd_id128_randomize`)
     ///
@@ -168,7 +207,7 @@ impl ID128 {
         if result < 0 {
             return Err(Error::SDError(result));
         }
-        Ok(ID128 { value: id128.value })
+        Ok(id128.into())
     }
 
     /// returns the boot ID of the executing kernel (`sd_id128_get_boot` )
@@ -187,7 +226,7 @@ impl ID128 {
         if result < 0 {
             return Err(Error::SDError(result));
         }
-        Ok(ID128 { value: id128.value })
+        Ok(id128.into())
     }
 
     /// returns an app specific boot id (`sd_id128_get_boot_app_specific`)
@@ -213,7 +252,7 @@ impl ID128 {
         if result < 0 {
             return Err(Error::SDError(result));
         }
-        Ok(ID128 { value: boot.value })
+        Ok(boot.into())
     }
 
     /// returns the machine ID of the executing host (`sd_id128_get_machine` )
@@ -234,7 +273,7 @@ impl ID128 {
         if result < 0 {
             return Err(Error::SDError(result));
         }
-        Ok(ID128 { value: id128.value })
+        Ok(id128.into())
     }
 
     /// returns an app specific machine id (`sd_id128_get_machine_app_specific`)
@@ -261,7 +300,7 @@ impl ID128 {
         if result < 0 {
             return Err(Error::SDError(result));
         }
-        Ok(ID128 { value: machine.value })
+        Ok(machine.into())
     }
 
     /// returns the invocation ID of the service (`sd_id128_get_invocation`)
@@ -281,7 +320,7 @@ impl ID128 {
         if result < 0 {
             return Err(Error::SDError(result));
         }
-        Ok(ID128 { value: id128.value })
+        Ok(id128.into())
     }
 
     /// strictly parses a string into an ID using native Rust functionality
@@ -420,12 +459,7 @@ impl ID128 {
         if result < 0 {
             return Err(Error::SDError(result));
         }
-        Ok(ID128 { value: id128.value })
-    }
-
-    /// constructs an ID from a raw value
-    pub fn from_raw(value: [u8; 16]) -> ID128 {
-        ID128 { value }
+        Ok(id128.into())
     }
 
     /// formats an ID as CString using libsystemd `sd_id128_to_string`
@@ -499,10 +533,9 @@ impl ID128 {
     /// This Rust native function offers the possibility to apply the same
     /// format tho: choose format "LibSystemD" and lower case.
     ///
-    /// The formatting default is in Rust native functions is:
-    /// 0123-4567-89AB-CDEF-0123-4567-89AB-CDEF.
-    /// The Kernel format in lower case looks like:
-    /// 01234567-89ab-cdef-0123-456789abcdef.
+    /// The formatting default is in Rust native function to_string is:
+    /// 01234567-89ab-cdef-0123-456789abcdef. This is the official defined
+    /// standard in RFC 4122.
     pub fn to_string_formatted(&self, format: Format, case: Case) -> String {
         let s = self.value
                     .iter()
@@ -532,10 +565,5 @@ impl ID128 {
                     })
                     .collect::<String>();
         s
-    }
-
-    /// return the raw &[u8; 16] value of the ID
-    pub fn as_bytes(&self) -> &[u8; 16] {
-        return &self.value;
     }
 }
