@@ -68,7 +68,7 @@ use std::{convert::TryFrom,
 /// - From<[u8; 16]> -> ID128: provides `into([u8; 16]) -> ID128`
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct ID128 {
-    value: [u8; 16]
+    ffi: ffi::sd_id128
 }
 
 /// Errors raised in sd-id128
@@ -163,31 +163,31 @@ impl fmt::Display for ID128 {
 
 impl From<ID128> for ffi::sd_id128 {
     fn from(id128: ID128) -> ffi::sd_id128 {
-        ffi::sd_id128 { value: id128.value }
+        id128.ffi
     }
 }
 
 impl From<ffi::sd_id128> for ID128 {
     fn from(sd_id128: ffi::sd_id128) -> ID128 {
-        ID128 { value: sd_id128.value }
+        ID128 { ffi: sd_id128 }
     }
 }
 
 impl AsRef<[u8; 16]> for ID128 {
     fn as_ref(&self) -> &[u8; 16] {
-        &self.value
+        &self.ffi.value
     }
 }
 
 impl From<ID128> for [u8; 16] {
     fn from(id128: ID128) -> [u8; 16] {
-        id128.value
+        id128.ffi.value
     }
 }
 
 impl From<[u8; 16]> for ID128 {
     fn from(value: [u8; 16]) -> ID128 {
-        ID128 { value }
+        ID128 { ffi: ffi::sd_id128 { value } }
     }
 }
 
@@ -247,8 +247,7 @@ impl ID128 {
     /// - `Err(SDError)`: sd-id128 returned an error code
     pub fn boot_id_app_specific(app: ID128) -> Result<Self, Error> {
         let mut boot = ffi::sd_id128::default();
-        let app_ffi = ffi::sd_id128 { value: app.value };
-        let result = unsafe { ffi::sd_id128_get_boot_app_specific(app_ffi, &mut boot) };
+        let result = unsafe { ffi::sd_id128_get_boot_app_specific(app.ffi, &mut boot) };
         if result < 0 {
             return Err(Error::SDError(result));
         }
@@ -295,8 +294,7 @@ impl ID128 {
     /// - `Err(SDError)`: sd-id128 returned an error code
     pub fn machine_id_app_specific(app: ID128) -> Result<Self, Error> {
         let mut machine = ffi::sd_id128::default();
-        let app_ffi = ffi::sd_id128 { value: app.value };
-        let result = unsafe { ffi::sd_id128_get_machine_app_specific(app_ffi, &mut machine) };
+        let result = unsafe { ffi::sd_id128_get_machine_app_specific(app.ffi, &mut machine) };
         if result < 0 {
             return Err(Error::SDError(result));
         }
@@ -400,7 +398,7 @@ impl ID128 {
                 },
             };
             if pair {
-                id.value[idseg] = value as u8;
+                id.ffi.value[idseg] = value as u8;
                 idseg += 1;
                 value = 0;
             } else {
@@ -487,8 +485,7 @@ impl ID128 {
     pub fn into_cstring_sd(self) -> Result<CString, Error> {
         let c_string = CString::new("0123456789ABCDEF0123456789ABCDEF").map_err(Error::NullError)?;
         let raw = c_string.into_raw();
-        let ffi_id128 = ffi::sd_id128 { value: self.value };
-        let result = unsafe { ffi::sd_id128_to_string(ffi_id128, raw) };
+        let result = unsafe { ffi::sd_id128_to_string(self.ffi, raw) };
         let c_string = unsafe { CString::from_raw(raw) };
         if result.is_null() {
             return Err(Error::SDError(0));
@@ -544,7 +541,8 @@ impl ID128 {
     /// Return Values:
     /// - String: text representation of the id
     pub fn to_string_formatted(&self, format: Format, case: Case) -> String {
-        self.value
+        self.ffi
+            .value
             .iter()
             .enumerate()
             .map(move |(pos, digit)| {
@@ -571,5 +569,47 @@ impl ID128 {
                 }
             })
             .collect::<String>()
+    }
+
+    /// Transform an ID128 into a FFI binding sd_id128.
+    ///
+    /// The FFI binding struct sd_id128 is only required for direct FFI calls.
+    pub fn into_ffi(self) -> ffi::sd_id128 {
+        self.ffi
+    }
+
+    /// Returns a reference to the inner FFI binding sd_id128.
+    ///
+    /// The FFI binding struct sd_id128 is only required for direct FFI calls.
+    pub fn as_ffi(&self) -> &ffi::sd_id128 {
+        &self.ffi
+    }
+
+    /// Constructs an ID128 from a FFI binding sd_id128.
+    ///
+    /// The FFI binding struct sd_id128 retrieved from a direct FFI call may be
+    /// used to construct a full ID128.
+    pub fn from_ffi(ffi: ffi::sd_id128) -> ID128 {
+        ID128 { ffi }
+    }
+
+    /// Returns a slice of the raw ID.
+    pub fn as_raw_value(&self) -> &[u8; 16] {
+        &self.ffi.value
+    }
+
+    /// Returns a mutable slice of the raw ID.
+    pub fn as_mut_raw_value(&mut self) -> &mut [u8; 16] {
+        &mut self.ffi.value
+    }
+
+    /// Transforms the ID128 into a raw value slice.
+    pub fn into_raw_value(self) -> [u8; 16] {
+        self.ffi.value
+    }
+
+    /// Constructs an ID128 from a raw value slice.
+    pub fn from_raw_value(value: [u8; 16]) -> ID128 {
+        ID128 { ffi: ffi::sd_id128 { value } }
     }
 }
