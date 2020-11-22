@@ -18,12 +18,13 @@ use sd_id128::ID128;
 #[test]
 fn debug_default() {
     assert_eq!(format!("{:?}", ID128::default()),
-               "ID128 { value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }");
+               "ID128 { ffi: sd_id128 { value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] \
+                } }");
 }
 
 #[test]
 fn debug_alternative() {
-    assert_eq!(format!("{:#?}", ID128::default()), "ID128 {\n    value: [\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n    ],\n}");
+    assert_eq!(format!("{:#?}", ID128::default()), "ID128 {\n    ffi: sd_id128 {\n        value: [\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n            0,\n        ],\n    },\n}");
 }
 
 #[test]
