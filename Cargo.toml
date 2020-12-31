@@ -1,7 +1,7 @@
 [package]
 name = "sd-id128"
 version = "0.1.0"
-authors = ["ente <ente@ck76.de>"]
+authors = ["Christian Klaue <mail@ck76.de>"]
 edition = "2018"
 description = "An API to sd-id128 as used by sd-journal."
 readme = "README.md"
