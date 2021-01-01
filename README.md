@@ -15,6 +15,7 @@ systemd.rs is an alternative to the [systemd-rust](https://github.com/jmesmon/ru
 - good documentation with links to the libsystemd documentation
 - 100% coverage of libsystemd within the area of focus
 - good test coverage
+- focus on usability
 
 ## License
 
