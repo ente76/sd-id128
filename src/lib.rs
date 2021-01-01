@@ -59,8 +59,8 @@ use std::{convert::TryFrom,
 /// Implemented Traits
 /// - Display: provides `to_string(&ID128) -> String` and `format!(..., &ID128)`
 /// - From<ID128> -> String: provides `into(ID128) -> String`
-/// - TryFrom<String> -> ID128: provides `try_into(String) -> ID128'
-/// - From<ffi::sd_id128> -> ID128: provides `into(ffi::sd_id128) -> ID128`
+/// - TryFrom<String> -> ID128: provides `try_into(String) -> ID128`
+/// - From<<ffi::sd_id128>> -> ID128: provides `into(ffi::sd_id128) -> ID128`
 /// - From<ID128> -> ffi::sd_id128: provides `into(ID128) -> ffi::sd_id128`
 /// - AsRef<[u8; 16]>: provides `as_ref(&ID128) -> &[u8; 16]`
 /// - Clone: provides `clone(&ID128) -> ID128`
