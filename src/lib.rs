@@ -16,11 +16,11 @@
 
 //! sd-id128 defines a wrapper for sd-id128 offered by libsystemd.
 //!
-//! libsystemd offers the
-//! [API sd-id128](<https://www.freedesktop.org/software/systemd/man/sd-id128.html>)
-//! to UUIDs as defined in [RFC 4122](<https://tools.ietf.org/html/rfc4122>).
-//! This crate offers ID128 as a wrapper around libsystemd based on FFI
-//! definitions in crate sd-sys.
+//! libsystemd offers the UUID API
+//! [sd-id128](<https://www.freedesktop.org/software/systemd/man/sd-id128.html>)
+//! as defined in [RFC 4122](<https://tools.ietf.org/html/rfc4122>).
+//! This crate defines ID128 as a wrapper around libsystemd based on FFI
+//! definitions in crate [sd-sys](https://gitlab.com/systemd.rs/sd-sys).
 //!
 //! This crate does not implement any global funtions. All methods are assigned
 //! to struct `ID128`.
@@ -32,8 +32,8 @@ use std::{convert::TryFrom,
 
 /// Wrapper for sd-id128 as offered in libsystemd.
 ///
-/// ID128 fully implements translations to FFI calls in libsystemd and native
-/// Rust functionality to handle such UUIDs.
+/// ID128 fully implements translations to FFI calls to libsystemd and native
+/// Rust functionality to handle UUIDs.
 ///
 /// FFI Constructors -> Result<ID128, Error>
 /// - bood_id: get boot id
@@ -81,11 +81,11 @@ pub struct ID128 {
 ///   code, i.e. an error code.
 /// - StringError: This error is raised during translation of C compatible
 ///   CString back into native String. The error is caused by non-UTF8 symbols.
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     NullError(NulError),
     SDError(i32),
-    StringError(IntoStringError),
+    IntoStringError(IntoStringError),
     ParseStringError(&'static str, usize)
 }
 
@@ -97,7 +97,7 @@ pub enum Error {
 ///   all formatting performed by calling FFI functionality
 /// - RFC: 00000000-0000-0000-0000-000000000000, this format is applied by
 ///   default to all native formatting
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Format {
     Simple,
     LibSystemD,
@@ -109,7 +109,7 @@ pub enum Format {
 /// Variants:
 /// - Upper
 /// - Lower: lower case is applied as default to all formatting
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Case {
     Upper,
     Lower
@@ -120,7 +120,7 @@ impl fmt::Display for Error {
         match *self {
             Error::NullError(ref error) => error.fmt(formatter),
             Error::SDError(_) => todo!(),
-            Error::StringError(ref error) => error.fmt(formatter),
+            Error::IntoStringError(ref error) => error.fmt(formatter),
             Error::ParseStringError(ref message, ref pos) => {
                 write!(formatter, "{}{}", message, pos)
             }
@@ -133,7 +133,7 @@ impl error::Error for Error {
         match *self {
             Error::NullError(ref error) => Some(error),
             Error::SDError(_) => None,
-            Error::StringError(ref error) => Some(error),
+            Error::IntoStringError(ref error) => Some(error),
             Error::ParseStringError(_, _) => None
         }
     }
@@ -192,15 +192,16 @@ impl From<[u8; 16]> for ID128 {
 }
 
 impl ID128 {
-    /// generates a new randomized 128-bit ID (`sd_id128_randomize`)
+    /// Generates a new randomized 128-bit ID
+    /// ([`sd_id128_randomize`](https://www.freedesktop.org/software/systemd/man/sd_id128_randomize.html#)).
     ///
     /// Every invocation returns a new randomly generated ID. The libsystemd API
     /// uses the /dev/urandom kernel random number generator. Note that
     /// `sd_id128_randomize()` always returns a UUID v4-compatible ID.
     ///
-    /// Return Values:
-    /// - `Ok(ID128)`: initialized ID128 struct
-    /// - `Err(SDError)`: sd-id128 returned an error code
+    /// # Return Values
+    /// - Ok(ID128): initialized ID128 struct
+    /// - Err(Error::SDError(i32)): sd-id128 returned an error code
     pub fn random_id() -> Result<Self, Error> {
         let mut id128 = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_randomize(&mut id128) };
@@ -210,16 +211,17 @@ impl ID128 {
         Ok(id128.into())
     }
 
-    /// returns the boot ID of the executing kernel (`sd_id128_get_boot` )
+    /// Returns the boot ID of the executing kernel
+    /// ([`sd_id128_get_boot`](https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#)).
     ///
     /// libsystemd API reads and parses the /proc/sys/kernel/random/boot_id file
     /// exposed by the kernel. It is randomly generated early at boot and is
     /// unique for every running kernel instance. This function also internally
     /// caches the returned ID to make this call a cheap operation.
     ///
-    /// Return Values:
-    /// - `Ok(ID128)`: initialized ID128 struct
-    /// - `Err(SDError)`: sd-id128 returned an error code
+    /// # Return Values
+    /// - Ok(ID128): initialized ID128 struct
+    /// - Err(Error::SDError(i32)): sd-id128 returned an error code
     pub fn boot_id() -> Result<Self, Error> {
         let mut id128 = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_boot(&mut id128) };
@@ -229,7 +231,8 @@ impl ID128 {
         Ok(id128.into())
     }
 
-    /// returns an app specific boot id (`sd_id128_get_boot_app_specific`)
+    /// Returns an app specific boot id
+    /// ([`sd_id128_get_boot_app_specific`](https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#)).
     ///
     /// It is recommended to use this function instead of `boot_id` when passing
     /// an ID to untrusted environments, in order to make sure that the original
@@ -237,14 +240,9 @@ impl ID128 {
     /// application remains stable on a given machine, but cannot be easily
     /// correlated with IDs used in other applications on the same machine.
     ///
-    /// <https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#>
-    ///
-    /// Parameters:
-    /// - app: an ID128 instance with a pre-defined app id
-    ///
-    /// Return Values:
-    /// - `Ok(ID128)`: the boot id calculated based on the app id
-    /// - `Err(SDError)`: sd-id128 returned an error code
+    /// # Return Values
+    /// - Ok(ID128): initialized ID128 struct
+    /// - Err(Error::SDError(i32)): sd-id128 returned an error code
     pub fn boot_id_app_specific(app: ID128) -> Result<Self, Error> {
         let mut boot = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_boot_app_specific(app.ffi, &mut boot) };
@@ -254,18 +252,17 @@ impl ID128 {
         Ok(boot.into())
     }
 
-    /// returns the machine ID of the executing host (`sd_id128_get_machine` )
+    /// Returns the machine ID of the executing host
+    /// ([`sd_id128_get_machine`](https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#))
     ///
     /// This reads and parses the machine-id file. This libsystemd API caches
     /// the machine ID internally to make retrieving the machine ID a cheap
     /// operation. This ID may be used wherever a unique identifier for the
     /// local system is needed.
     ///
-    /// <https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#>
-    ///
-    /// Return Values:
-    /// - `Ok(ID128)`: initialized ID128 struct
-    /// - `Err(SDError)`: sd-id128 returned an error code
+    /// # Return Values
+    /// - Ok(ID128): initialized ID128 struct
+    /// - Err(Error::SDError(i32)): sd-id128 returned an error code
     pub fn machine_id() -> Result<Self, Error> {
         let mut id128 = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_machine(&mut id128) };
@@ -275,7 +272,8 @@ impl ID128 {
         Ok(id128.into())
     }
 
-    /// returns an app specific machine id (`sd_id128_get_machine_app_specific`)
+    /// Returns an app specific machine id
+    /// ([`sd_id128_get_machine_app_specific`](https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#)).
     ///
     /// It is recommended to use this function instead of `machine_id` when
     /// passing an ID to untrusted environments, in order to make sure that the
@@ -284,14 +282,9 @@ impl ID128 {
     /// easily correlated with IDs used in other applications on the same
     /// machine.
     ///
-    /// <https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#>
-    ///
-    /// Parameters:
-    /// - app: an ID128 instance with a pre-defined app id
-    ///
-    /// Return Values:
-    /// - `Ok(ID128)`: the machine id calculated based on the app id
-    /// - `Err(SDError)`: sd-id128 returned an error code
+    /// # Return Values
+    /// - Ok(ID128): initialized ID128 struct
+    /// - Err(Error::SDError(i32)): sd-id128 returned an error code
     pub fn machine_id_app_specific(app: ID128) -> Result<Self, Error> {
         let mut machine = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_machine_app_specific(app.ffi, &mut machine) };
@@ -301,17 +294,16 @@ impl ID128 {
         Ok(machine.into())
     }
 
-    /// returns the invocation ID of the service (`sd_id128_get_invocation`)
+    /// Returns the invocation ID of the service
+    /// ([`sd_id128_get_invocation`](https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#)).
     ///
     /// In its current implementation, this reads and parses the $INVOCATION_ID
     /// environment variable that the service manager sets when activating a
     /// service.
     ///
-    /// <https://www.freedesktop.org/software/systemd/man/sd_id128_get_machine.html#>
-    ///
-    /// Return Values:
-    /// - `Ok(ID128)`: the boot id calculated based on the app id
-    /// - `Err(SDError)`: sd-id128 returned an error code
+    /// # Return Values
+    /// - Ok(ID128): initialized ID128 struct
+    /// - Err(Error::SDError(i32)): sd-id128 returned an error code
     pub fn invocation_id() -> Result<Self, Error> {
         let mut id128 = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_invocation(&mut id128) };
@@ -321,7 +313,8 @@ impl ID128 {
         Ok(id128.into())
     }
 
-    /// strictly parses a string into an ID using native Rust functionality
+    /// Parses a string into an ID applying strict rules using native Rust
+    /// functionality (i.e. without any FFI call).
     ///
     /// Takes a character string and tries to parse it into a valid ID. This
     /// method parses the string using native Rust functionality and strict
@@ -336,13 +329,10 @@ impl ID128 {
     /// - letter casing can be either upper or lower case
     /// - dashes must conform precisely to any of the formats
     ///
-    /// Parameters:
-    /// - &str: source string
-    ///
-    /// Return Values:
-    /// - Ok(ID): success
-    /// - Err(ParseStringError): the source string did not strictly comply with
-    ///   the expected format
+    /// # Return Values
+    /// - Ok(ID128): success
+    /// - Err(Error::ParseStringError): the source string did not strictly
+    ///   comply with the expected format
     pub fn from_str(string: &str) -> Result<Self, Error> {
         let mut id = ID128::default();
         let mut idseg = 0;
@@ -409,7 +399,7 @@ impl ID128 {
         Ok(id)
     }
 
-    /// parses a string into an ID using native Rust functionality
+    /// Parses a string into an ID using native Rust functionality.
     ///
     /// Takes a character string and tries to parse it into a valid ID. This
     /// method parses the string using native Rust functionality and lax
@@ -425,31 +415,25 @@ impl ID128 {
     /// - remove all dashes: transform the string from any valid or invalid
     ///   format into a libsystemd conforming format
     ///
-    /// Parameters:
-    /// - &str: source string
-    ///
-    /// Return Values:
-    /// - Ok(ID): success
-    /// - Err(ParseStringError): the source string did not strictly comply with
+    /// # Return Values
+    /// - Ok(ID128): success
+    /// - Err(Error::ParseStringError): the source string did not comply with
     ///   the expected format
     pub fn from_str_lax(string: &str) -> Result<Self, Error> {
         let string = string.trim().replace("-", "");
         ID128::from_str(string.as_str())
     }
 
-    /// parses a string into an ID using libsystemd `sd_id128_from_string`
+    /// Parses a string into an ID using libsystemd
+    /// ([`sd_id128_from_string`](https://www.freedesktop.org/software/systemd/man/sd_id128_to_string.html#)).
     ///
     /// Takes a character string with 32 hexadecimal digits (either lowercase or
     /// uppercase) and parses them back into a 128-bit ID.
     ///
-    /// Parameter:
-    /// - string: &str representation of an ID. This is supposed to be a 32
-    ///   hexadecimal digits (upper or lower case)
-    ///
-    /// Return Values:
-    /// - `Ok(ID128)`: initialized ID128 struct
-    /// - `Err(NulError)`: the source string did contain a 0-byte
-    /// - `Err(SDError)`: sd-id128 returned an error code
+    /// # Return Values
+    /// - Ok(ID128): initialized ID128 struct
+    /// - Err(Error::NulError): the source string did contain a 0-byte
+    /// - Err(Error::SDError): sd-id128 returned an error code
     pub fn from_str_sd(string: &str) -> Result<Self, Error> {
         let string = CString::new(string).map_err(Error::NullError)?;
         let mut id128 = ffi::sd_id128::default();
@@ -460,7 +444,8 @@ impl ID128 {
         Ok(id128.into())
     }
 
-    /// formats an ID as CString using libsystemd `sd_id128_to_string`
+    /// Formats an ID as CString using libsystemd
+    /// ([`sd_id128_to_string`](https://www.freedesktop.org/software/systemd/man/sd_id128_to_string.html#)).
     ///
     /// This function performs a FFI call to libsystemd to transform an ID into
     /// a string. There are some alternative methods available:
@@ -473,15 +458,15 @@ impl ID128 {
     /// This function is supposed to always be successful. Since there are some
     /// rather theoretical errors possible, the return value is a Result<>.
     ///
-    /// Return Values:
+    /// # Return Values
     /// - Ok(String): a 128-bit ID as a character string. The ID will be
     ///   formatted as 32 lowercase hexadecimal digits and be terminated by a
     ///   NUL byte.
-    /// - Err(NullError): If this error is reported, it indicates an error in
-    ///   this library.
-    /// - Err(SDError): If this error is reported, it indicates an error in
-    ///   libsystemd and/or in this library. The error code is always 0 and thus
-    ///   won't reveal any further information.
+    /// - Err(Error::NullError): If this error is reported, it indicates an
+    ///   error in this library.
+    /// - Err(Error::SDError): If this error is reported, it indicates an error
+    ///   in libsystemd and/or in this library. The error code is always 0 and
+    ///   thus won't reveal any further information.
     pub fn into_cstring_sd(self) -> Result<CString, Error> {
         let c_string = CString::new("0123456789ABCDEF0123456789ABCDEF").map_err(Error::NullError)?;
         let raw = c_string.into_raw();
@@ -493,7 +478,8 @@ impl ID128 {
         Ok(c_string)
     }
 
-    /// formats an ID as String using libsystemd `sd_id128_to_string`
+    /// Formats an ID as String using libsystemd
+    /// ([`sd_id128_to_string`](https://www.freedesktop.org/software/systemd/man/sd_id128_to_string.html#)).
     ///
     /// This function performs a FFI call to libsystemd to transform an ID into
     /// a string. There are some alternative methods available:
@@ -507,22 +493,22 @@ impl ID128 {
     /// This function is supposed to always be successful. Since there are some
     /// rather theoretical errors possible, the return value is a Result<>.
     ///
-    /// Return Values:
+    /// # Return Values
     /// - Ok(String): a 128-bit ID as a character string. The ID will be
     ///   formatted as 32 lowercase hexadecimal digits and be terminated by a
     ///   NUL byte.
-    /// - Err(NullError): If this error is reported, it indicates an error in
-    ///   this library.
-    /// - Err(SDError): If this error is reported, it indicates an error in
-    ///   libsystemd and/or in this library. The error code is always 0 and thus
-    ///   won't reveal any further information.
+    /// - Err(Error::NullError): If this error is reported, it indicates an
+    ///   error in this library.
+    /// - Err(Error::SDError): If this error is reported, it indicates an error
+    ///   in libsystemd and/or in this library. The error code is always 0 and
+    ///   thus won't reveal any further information.
     pub fn to_string_sd(&self) -> Result<String, Error> {
         let clone = self.clone();
         let c_string = clone.into_cstring_sd()?;
-        c_string.into_string().map_err(Error::StringError)
+        c_string.into_string().map_err(Error::IntoStringError)
     }
 
-    /// formats an ID as String using Rust native functionality
+    /// Formats an ID as String using Rust native functionality.
     ///
     /// This function transforms an ID into a String using native Rust
     /// functionality. As an alternative the methods `into_cstring_sd` and
@@ -534,11 +520,7 @@ impl ID128 {
     /// 01234567-89ab-cdef-0123-456789abcdef. This is the official defined
     /// standard in RFC 4122.
     ///
-    /// Parameters:
-    /// - Format: RFC, LibSystemD or Simple
-    /// - Case: whether hexadecimal letter shall be upper or lower case
-    ///
-    /// Return Values:
+    /// # Return Values
     /// - String: text representation of the id
     pub fn to_string_formatted(&self, format: Format, case: Case) -> String {
         self.ffi
