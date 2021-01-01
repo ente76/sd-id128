@@ -3,13 +3,13 @@ name = "sd-id128"
 version = "0.1.0"
 authors = ["Christian Klaue <mail@ck76.de>"]
 edition = "2018"
-description = "An API to sd-id128 as used by sd-journal."
+description = "A wrapper for sd-id128 implemented in libsystemd."
 readme = "README.md"
-repository = "https://gitlab.com/systemd.rs/sdID128"
+repository = "https://gitlab.com/systemd.rs/sd-id128"
 license = "AGPL-3.0-or-later"
-keywords = ["systemd", "sd-journal", "sd-id128", "sdID128"]
+keywords = ["systemd", "sd-journal", "sd-id128", "ID128", "UUID"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sd-sys = {path = "../sd-sys"}
+sd-sys = "0.1"
