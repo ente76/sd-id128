@@ -30,16 +30,14 @@ Individual licenses may be granted upon request.
 
 ## ToDo
 
-- Implement Serde as feature
-- Implement Logging as feature
-- Test send and sync
-- Check Trait completenes
-  - Ord
-  - PartialOrd
-  - Hash
-- check conversion completenes
-  - AsRef
-  - AsMut
-- improve documentation
-- extend tests
-- setup bench tests
+- [ ] Implement Serde as feature
+- [ ] Check Trait completenes
+  - [ ] Ord
+  - [ ] PartialOrd
+  - [ ] Hash
+- [ ] check conversion completenes
+  - [ ] AsRef
+  - [ ] AsMut
+- [ ] improve documentation with examples
+- [ ] extend tests
+- [ ] setup bench tests
