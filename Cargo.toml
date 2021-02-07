@@ -6,7 +6,7 @@ edition = "2018"
 description = "A wrapper for sd-id128 implemented in libsystemd."
 readme = "README.md"
 repository = "https://gitlab.com/systemd.rs/sd-id128"
-license = "AGPL-3.0-or-later"
+license = "AGPL-3.0"
 keywords = ["systemd", "sd-id128", "ID128", "UUID"]
 categories = ["os::linux-apis", "external-ffi-bindings", "api-bindings"]
 

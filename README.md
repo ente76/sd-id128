@@ -20,8 +20,10 @@ systemd.rs is an alternative to the [systemd-rust](https://github.com/jmesmon/ru
 
 ## License
 
-sd-id128: a wrapper for sd-id128 of libsystemd
+sd-id128 is published under the AGPL-3.0, individual licenses may be granted upon request.
 
+```license
+sd-id128: a wrapper for sd-id128 of libsystemd
 Copyright (C) 2020 Christian Klaue [mail@ck76.de]
 
 This program is free software: you can redistribute it and/or modify
@@ -36,8 +38,7 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-Individual licenses may be granted upon request.
+```
 
 ## ToDo
 
