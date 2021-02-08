@@ -10,6 +10,16 @@ github.com | crates.io | docs.rs
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-id128)](https://github.com/ente76/sd-id128) | [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128) | [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-journal)](https://github.com/ente76/sd-journal) | [![Crates.io](https://img.shields.io/crates/v/sd-journal)](https://crates.io/crates/sd-journal) | [![docs.rs](https://docs.rs/sd-journal/badge.svg)](https://docs.rs/sd-journal)
 
+## Version History
+
+- 01.01.2021 v0.1.0
+  - initial version
+- 01.01.2021 v0.1.1
+  - documentation errors fixed
+- 08.02.2021 v0.1.2
+  - project repository moved gitlab --> github
+  - minor documentation improvements
+
 ## ToDo
 
 - [ ] Implement Serde as feature
