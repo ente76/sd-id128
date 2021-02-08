@@ -1,5 +1,5 @@
 // testing on sd-id128
-// Copyright (C) 2020 Christian Klaue ente@ck76.de
+// Copyright (C) 2020 Christian Klaue [mail@ck76.de]
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by

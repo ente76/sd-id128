@@ -1,5 +1,5 @@
 // sd-id128: wrapper for sd-id128 of libsystemd
-// Copyright (C) 2020 Christian Klaue ente@ck76.de
+// Copyright (C) 2020 Christian Klaue [mail@ck76.de]
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -14,16 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-//! sd-id128 defines a wrapper for sd-id128 offered by libsystemd.
+//! [![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-or%20I%20sing-53a0d0?style=flat&logo=Buy-Me-A-Coffee)](https://www.buymeacoffee.com/ente)  [![donate@paypal](https://img.shields.io/badge/paypal-donation-53a0d0?style=flat&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=CRGNTJBS4AD4G)
 //!
-//! libsystemd offers the UUID API
-//! [sd-id128](<https://www.freedesktop.org/software/systemd/man/sd-id128.html>)
-//! as defined in [RFC 4122](<https://tools.ietf.org/html/rfc4122>).
-//! This crate defines ID128 as a wrapper around libsystemd based on FFI
-//! definitions in crate [sd-sys](https://gitlab.com/systemd.rs/sd-sys).
-//!
-//! This crate does not implement any global funtions. All methods are assigned
-//! to struct `ID128`.
+//! [sd-id128](https://github.com/ente76/sd-id128) is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
 use sd_sys::id128 as ffi;
 use std::{convert::TryFrom,
           error,
