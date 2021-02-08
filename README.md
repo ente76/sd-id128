@@ -1,22 +1,26 @@
 # sd-id128
 
-sd-id128 is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://gitlab.com/systemd.rs) project.
+sd-id128 is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
 
-
-gitlab.com | crates.io | docs.rs
+github.com | crates.io | docs.rs
 -----------|-----------|--------
-[sd-sys](https://gitlab.com/systemd.rs/sd-sys) | [![Crates.io](https://img.shields.io/crates/v/sd-sys)](https://crates.io/crates/sd-sys) | [![docs.rs](https://docs.rs/sd-sys/badge.svg)](https://docs.rs/sd-sys/)
-[sd-id128](https://gitlab.com/systemd.rs/sd-id128) | [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128) | [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)
-[sd-journal](https://gitlab.com/systemd.rs/sd-journal) | [![Crates.io](https://img.shields.io/crates/v/sd-journal)](https://crates.io/crates/sd-journal) | [![docs.rs](https://docs.rs/sd-journal/badge.svg)](https://docs.rs/sd-journal)
+[sd-sys](https://github.com/ente76/sd-sys) | [![Crates.io](https://img.shields.io/crates/v/sd-sys)](https://crates.io/crates/sd-sys) | [![docs.rs](https://docs.rs/sd-sys/badge.svg)](https://docs.rs/sd-sys/)
+[sd-id128](https://github.com/ente76/sd-id128) | [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128) | [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)
+[sd-journal](https://github.com/ente76/sd-journal) | [![Crates.io](https://img.shields.io/crates/v/sd-journal)](https://crates.io/crates/sd-journal) | [![docs.rs](https://docs.rs/sd-journal/badge.svg)](https://docs.rs/sd-journal)
 
-systemd.rs is an alternative to the [systemd-rust](https://github.com/jmesmon/rust-systemd) project.
+## ToDo
 
-- systemd.rs is published under the AGPL-3.0 license. Individual/commercial licenses are available upon request.
-- focused coverage of sd-id128 & sd-journal only (currently there are no plans to extend this coverage)
-- good documentation with links to the libsystemd documentation
-- 100% coverage of libsystemd within the area of focus
-- good test coverage
-- focus on usability
+- [ ] Implement Serde as feature
+- [ ] Check Trait completenes
+  - [ ] Ord
+  - [ ] PartialOrd
+  - [ ] Hash
+- [ ] check conversion completenes
+  - [ ] AsRef
+  - [ ] AsMut
+- [ ] improve documentation with examples
+- [ ] extend tests
+- [ ] setup bench tests
 
 ## License
 
@@ -39,17 +43,3 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ```
-
-## ToDo
-
-- [ ] Implement Serde as feature
-- [ ] Check Trait completenes
-  - [ ] Ord
-  - [ ] PartialOrd
-  - [ ] Hash
-- [ ] check conversion completenes
-  - [ ] AsRef
-  - [ ] AsMut
-- [ ] improve documentation with examples
-- [ ] extend tests
-- [ ] setup bench tests
