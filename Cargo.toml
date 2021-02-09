@@ -13,4 +13,4 @@ categories = ["os::linux-apis", "external-ffi-bindings", "api-bindings"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sd-sys = {version="0.1", path="../sd-sys"}
+sd-sys = {version="0.1"}
