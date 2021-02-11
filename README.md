@@ -14,7 +14,7 @@ This library is developed against the latest version of systemd. Unfortunately n
 
 - 247
 
-Feature may be added to default features at a certain moment.
+Feature may be added to the default feature set with major version increments.
 
 ### cargo.toml
 
@@ -51,7 +51,7 @@ println!("The boot id in upper case libsystemd format is: {}",
 - 08.02.2021 v0.1.2
   - project repository moved gitlab --> github
   - minor documentation improvements
-- (planned) v0.1.3
+- (planned) v0.2.0
   - introduce feature 247
 
 ## ToDo
