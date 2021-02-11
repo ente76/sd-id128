@@ -12,7 +12,8 @@
 
 This library is developed against the latest version of systemd. Unfortunately not all systems are up to date in that regard. Compatibility can be mastered using features. Each feature is named after the corresponding systemd version. The following features exist currently:
 
-- 247
+- 240: Jan 12, 2019
+- 233: Mar 12, 2017
 
 Feature may be added to the default feature set with major version increments.
 

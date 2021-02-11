@@ -21,9 +21,9 @@ jobs:
       matrix:
         include:
           - system: "ubuntu-20.04"
-            features: ""
+            features: "--features \"233 240\""
           - system: "ubuntu-18.04"
-            features: ""
+            features: "--features \"233\""
           - system: "ubuntu-16.04"
             features: ""
     
