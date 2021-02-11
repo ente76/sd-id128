@@ -17,6 +17,7 @@ jobs:
     runs-on: ${{ matrix.system }}
 
     strategy:
+      fail-fast: false
       matrix:
         include:
           - system: "ubuntu-20.04"
