@@ -14,9 +14,58 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-//! [![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-or%20I%20sing-53a0d0?style=flat&logo=Buy-Me-A-Coffee)](https://www.buymeacoffee.com/ente)  [![donate@paypal](https://img.shields.io/badge/paypal-donation-53a0d0?style=flat&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=CRGNTJBS4AD4G)
+//! [![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-id128?label=github&logo=github)](https://github.com/ente76/sd-id128)  [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128)  [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)  ![test](https://github.com/ente76/sd-id128/workflows/test/badge.svg) [![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-or%20I%20sing-53a0d0?style=flat&logo=Buy-Me-A-Coffee)](https://www.buymeacoffee.com/ente)  [![donate@paypal](https://img.shields.io/badge/paypal-donation-53a0d0?style=flat&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=CRGNTJBS4AD4G)  
 //!
 //! [sd-id128](https://github.com/ente76/sd-id128) is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
+//!
+//! ## Introduction
+//!
+//! ### Features
+//!
+//! This library is developed against the latest version of systemd.
+//! Unfortunately not all systems are up to date in that regard. Compatibility
+//! can be mastered using features. Each feature is named after the
+//! corresponding systemd version. The following features exist currently:
+//!
+//! - 240: Jan 12, 2019
+//! - 233: Mar 12, 2017
+//!
+//! All features are in the default feature set. If required, default-features
+//! must be turned off. Features are stacking: if you select feature 240, you
+//! will get 233 included.
+//!
+//! ### cargo.toml
+//!
+//! default, all features included for newest version of libsystemd:
+//!
+//! ```toml
+//! [dependencies]
+//! sd-id128 = "1.0"
+//! ```
+//!
+//! support for version 240+ / with features 233 and 240:
+//!
+//! ```toml
+//! [dependencies]
+//! sd-id128 = {default-features=false, version="1.0", features=["240"]}
+//! ```
+//!
+//! support for versions older than 233:
+//!
+//! ```toml
+//! [dependencies]
+//! sd-id128 = {default-features=false, version="1.0"}
+//! ```
+//!
+//! ### Example
+//!
+//! ```rust
+//! use sd_id128::{Case, Format, ID128};
+//! let id128 = ID128::boot_id().unwrap();
+//! println!("The boot id in RFC format is: {}", id128);
+//! println!("The boot id in libsystemd format is: {}",
+//!          id128.to_string_formatted(Format::LibSystemD, Case::Lower));
+//! ```
 use sd_sys::id128 as ffi;
 use std::{convert::TryFrom,
           error,
