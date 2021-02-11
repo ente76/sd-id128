@@ -33,7 +33,7 @@ jobs:
     - name: install libsystemd
       run: sudo apt-get install -y libsystemd-dev
     - name: build
-      run: cargo build --verbose ${{ features }}
+      run: cargo build --verbose ${{ matrix.features }}
     - name: run tests
       run: cargo test --verbose
     - name: doc test
