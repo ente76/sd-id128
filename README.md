@@ -1,9 +1,8 @@
 # sd-id128
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-id128?label=github&logo=github)](https://github.com/ente76/sd-id128)  [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128)  [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ente76/sd-id128/test) [![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-or%20I%20sing-53a0d0?style=flat&logo=Buy-Me-A-Coffee)](https://www.buymeacoffee.com/ente)  [![donate@paypal](https://img.shields.io/badge/paypal-donation-53a0d0?style=flat&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=CRGNTJBS4AD4G)  
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-id128?label=github&logo=github)](https://github.com/ente76/sd-id128)  [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128)  [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ente76/sd-id128/test?label=test&logo=github) [![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-or%20I%20sing-53a0d0?style=flat&logo=Buy-Me-A-Coffee)](https://www.buymeacoffee.com/ente)  [![donate@paypal](https://img.shields.io/badge/paypal-donation-53a0d0?style=flat&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=CRGNTJBS4AD4G)  
 
-
- [sd-id128](https://github.com/ente76/sd-id128) is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
+[sd-id128](https://github.com/ente76/sd-id128) is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
 
 ## Introduction
 
@@ -22,21 +21,21 @@ default, all features included for newest version of libsystemd:
 
 ```toml
 [dependencies]
-sd-id128 = "0.1"
+sd-id128 = "1.0"
 ```
 
 support for version 240+ / with features 233 and 240:
 
 ```toml
 [dependencies]
-sd-id128 = {default-features=false, version="0.1", features=["240"]}
+sd-id128 = {default-features=false, version="1.0", features=["240"]}
 ```
 
 support for versions older than 233:
 
 ```toml
 [dependencies]
-sd-id128 = {default-features=false, version="0.1"}
+sd-id128 = {default-features=false, version="1.0"}
 ```
 
 ### Example
@@ -51,6 +50,8 @@ println!("The boot id in libsystemd format is: {}",
 
 ## Version History
 
+As of version 1.0 this library uses the semantic versioning.
+
 - 01.01.2021 v0.1.0
   - initial version
 - 01.01.2021 v0.1.1
@@ -58,7 +59,7 @@ println!("The boot id in libsystemd format is: {}",
 - 08.02.2021 v0.1.2
   - project repository moved gitlab --> github
   - minor documentation improvements
-- (planned) v0.2.0
+- (planned) v1.0
   - introduce features
   - extend documentation
 
@@ -66,8 +67,8 @@ println!("The boot id in libsystemd format is: {}",
 
 - [ ] Implement Serde as feature
 - [ ] Check Trait completenes
-  ~~- [ ] Ord~~
-  ~~- [ ] PartialOrd~~
+  - ~~[ ] Ord~~
+  - ~~[ ] PartialOrd~~
   - [ ] Hash
 - [ ] check conversion completenes
   - [ ] AsRef
