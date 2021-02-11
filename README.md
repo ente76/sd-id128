@@ -1,14 +1,46 @@
 # sd-id128
 
-[![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-or%20I%20sing-53a0d0?style=flat&logo=Buy-Me-A-Coffee)](https://www.buymeacoffee.com/ente)  [![donate@paypal](https://img.shields.io/badge/paypal-donation-53a0d0?style=flat&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=CRGNTJBS4AD4G)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-id128?label=github&logo=github)](https://github.com/ente76/sd-id128)  [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128)  [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ente76/sd-id128/test) [![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-or%20I%20sing-53a0d0?style=flat&logo=Buy-Me-A-Coffee)](https://www.buymeacoffee.com/ente)  [![donate@paypal](https://img.shields.io/badge/paypal-donation-53a0d0?style=flat&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=CRGNTJBS4AD4G)  
 
-sd-id128 is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
 
-github.com | crates.io | docs.rs
------------|-----------|--------
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-sys)](https://github.com/ente76/sd-sys) | [![Crates.io](https://img.shields.io/crates/v/sd-sys)](https://crates.io/crates/sd-sys) | [![docs.rs](https://docs.rs/sd-sys/badge.svg)](https://docs.rs/sd-sys/)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-id128)](https://github.com/ente76/sd-id128) | [![Crates.io](https://img.shields.io/crates/v/sd-id128)](https://crates.io/crates/sd-id128) | [![docs.rs](https://docs.rs/sd-id128/badge.svg)](https://docs.rs/sd-id128/)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/ente76/sd-journal)](https://github.com/ente76/sd-journal) | [![Crates.io](https://img.shields.io/crates/v/sd-journal)](https://crates.io/crates/sd-journal) | [![docs.rs](https://docs.rs/sd-journal/badge.svg)](https://docs.rs/sd-journal)
+ [sd-id128](https://github.com/ente76/sd-id128) is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
+
+
+## Introduction
+
+### Features
+
+This library is developed against the latest version of systemd. Unfortunately not all systems are up to date in that regard. Compatibility can be mastered using features. Each feature is named after the corresponding systemd version. The following features exist currently:
+
+- 247
+
+Feature may be added to default features at a certain moment.
+
+### cargo.toml
+
+without features:
+
+```toml
+[dependencies]
+sd-id128 = "0.1"
+```
+
+with support for latest version:
+
+```toml
+[dependencies]
+sd-id128 = { version="0.1", features=["247"]}
+```
+
+### Examples
+
+```rust
+use sd_id128::{Case, Format, ID128};
+let id128 = ID128::boot_id().unwrap();
+println!("The boot id in RFC format is: {}", id128);
+println!("The boot id in upper case libsystemd format is: {}",
+         id128.to_string_formatted(Format::LibSystemD, Case::Upper));
+```
 
 ## Version History
 
@@ -19,6 +51,8 @@ github.com | crates.io | docs.rs
 - 08.02.2021 v0.1.2
   - project repository moved gitlab --> github
   - minor documentation improvements
+- (planned) v0.1.3
+  - introduce feature 247
 
 ## ToDo
 

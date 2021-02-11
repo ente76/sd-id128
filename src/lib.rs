@@ -236,6 +236,7 @@ impl ID128 {
     /// # Return Values
     /// - Ok(ID128): initialized ID128 struct
     /// - Err(Error::SDError(i32)): sd-id128 returned an error code
+    #[cfg(feature = "247")]
     pub fn boot_id_app_specific(app: ID128) -> Result<Self, Error> {
         let mut boot = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_boot_app_specific(app.ffi, &mut boot) };

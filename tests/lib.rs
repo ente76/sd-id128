@@ -64,6 +64,7 @@ fn boot_id() {
 }
 
 #[test]
+#[cfg(feature = "247")]
 fn boot_id_hashed() {
     let random = ID128::random_id().unwrap();
     let boot = ID128::boot_id().unwrap();
