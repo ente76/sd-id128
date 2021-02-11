@@ -15,7 +15,7 @@ categories = ["os::linux-apis", "external-ffi-bindings", "api-bindings"]
 [features]
 240 = []
 233 = []
-default = []
+default = ["240"]
 
 [dependencies]
 sd-sys = {version="0.1"}

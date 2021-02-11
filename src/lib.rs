@@ -279,7 +279,7 @@ impl ID128 {
     /// # Return Values
     /// - Ok(ID128): initialized ID128 struct
     /// - Err(Error::SDError(i32)): sd-id128 returned an error code
-    #[cfg(feature = "233")]
+    #[cfg(any(feature = "233", feature = "240"))]
     pub fn machine_id_app_specific(app: ID128) -> Result<Self, Error> {
         let mut machine = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_machine_app_specific(app.ffi, &mut machine) };

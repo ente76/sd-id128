@@ -5,7 +5,6 @@
 
  [sd-id128](https://github.com/ente76/sd-id128) is a rust wrapper for sd-id128 in the systemd API of [libsystemd](https://www.freedesktop.org/software/systemd/man/sd-id128.html). sd-id128 is part of the [systemd.rs](https://github.com/ente76/systemd.rs) project.
 
-
 ## Introduction
 
 ### Features
@@ -15,32 +14,39 @@ This library is developed against the latest version of systemd. Unfortunately n
 - 240: Jan 12, 2019
 - 233: Mar 12, 2017
 
-Feature may be added to the default feature set with major version increments.
+All features are in the default feature set. If required, default-features must be turned off. Features are stacking: if you select feature 240, you will get 233 included.
 
 ### cargo.toml
 
-without features:
+default, all features included for newest version of libsystemd:
 
 ```toml
 [dependencies]
 sd-id128 = "0.1"
 ```
 
-with support for latest version:
+support for version 240+ / with features 233 and 240:
 
 ```toml
 [dependencies]
-sd-id128 = { version="0.1", features=["247"]}
+sd-id128 = {default-features=false, version="0.1", features=["240"]}
 ```
 
-### Examples
+support for versions older than 233:
+
+```toml
+[dependencies]
+sd-id128 = {default-features=false, version="0.1"}
+```
+
+### Example
 
 ```rust
 use sd_id128::{Case, Format, ID128};
 let id128 = ID128::boot_id().unwrap();
 println!("The boot id in RFC format is: {}", id128);
-println!("The boot id in upper case libsystemd format is: {}",
-         id128.to_string_formatted(Format::LibSystemD, Case::Upper));
+println!("The boot id in libsystemd format is: {}",
+         id128.to_string_formatted(Format::LibSystemD, Case::Lower));
 ```
 
 ## Version History
@@ -53,21 +59,22 @@ println!("The boot id in upper case libsystemd format is: {}",
   - project repository moved gitlab --> github
   - minor documentation improvements
 - (planned) v0.2.0
-  - introduce feature 247
+  - introduce features
+  - extend documentation
 
 ## ToDo
 
 - [ ] Implement Serde as feature
 - [ ] Check Trait completenes
-  - [ ] Ord
-  - [ ] PartialOrd
+  ~~- [ ] Ord~~
+  ~~- [ ] PartialOrd~~
   - [ ] Hash
 - [ ] check conversion completenes
   - [ ] AsRef
   - [ ] AsMut
-- [ ] improve documentation with examples
+- [x] improve documentation with examples
 - [ ] extend tests
-- [ ] setup bench tests
+- ~~[ ] setup bench tests~~
 
 ## License
 
