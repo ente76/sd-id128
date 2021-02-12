@@ -18,4 +18,4 @@ categories = ["os::linux-apis", "external-ffi-bindings", "api-bindings"]
 default = ["240"]
 
 [dependencies]
-sd-sys = {version="0.1"}
+sd-sys = {version="1.0", path="../sd-sys/"}
