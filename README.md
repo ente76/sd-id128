@@ -66,11 +66,11 @@ As of version 1.0 this library uses the semantic versioning.
 ## ToDo
 
 - [ ] Implement Serde as feature
-- [ ] Check Trait completenes
+- [ ] Check Trait completeness
   - ~~[ ] Ord~~
   - ~~[ ] PartialOrd~~
   - [ ] Hash
-- [ ] check conversion completenes
+- [ ] check conversion completeness
   - [ ] AsRef
   - [ ] AsMut
 - [x] improve documentation with examples
