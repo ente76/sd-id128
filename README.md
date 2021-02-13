@@ -59,9 +59,11 @@ As of version 1.0 this library uses the semantic versioning.
 - 08.02.2021 v0.1.2
   - project repository moved gitlab --> github
   - minor documentation improvements
-- 11.02.2021 v1.0
+- 11.02.2021 v1.0.0
   - introduce features
   - extend documentation
+- 13.02.2021 v1.0.1
+  - dependency to sd-sys raised to 1.0.0
 
 ## ToDo
 

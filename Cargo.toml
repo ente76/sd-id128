@@ -1,6 +1,6 @@
 [package]
 name = "sd-id128"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Christian Klaue <mail@ck76.de>"]
 edition = "2018"
 description = "A wrapper for sd-id128 implemented in libsystemd."
@@ -18,4 +18,4 @@ categories = ["os::linux-apis", "external-ffi-bindings", "api-bindings"]
 default = ["240"]
 
 [dependencies]
-sd-sys = {version="1.0", path="../sd-sys/"}
+sd-sys = {version="1.0"}
