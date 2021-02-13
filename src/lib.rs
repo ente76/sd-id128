@@ -348,6 +348,7 @@ impl ID128 {
     /// # Return Values
     /// - Ok(ID128): initialized ID128 struct
     /// - Err(Error::SDError(i32)): sd-id128 returned an error code
+    #[cfg(any(feature = "232", feature = "233", feature = "240"))]
     pub fn invocation_id() -> Result<Self, Error> {
         let mut id128 = ffi::sd_id128::default();
         let result = unsafe { ffi::sd_id128_get_invocation(&mut id128) };

@@ -15,6 +15,7 @@ categories = ["os::linux-apis", "external-ffi-bindings", "api-bindings"]
 [features]
 240 = []
 233 = []
+232 = []
 default = ["240"]
 
 [dependencies]

@@ -10,10 +10,11 @@
 
 This library is developed against the latest version of systemd. Unfortunately not all systems are up to date in that regard. Compatibility can be mastered using features. Each feature is named after the corresponding systemd version. The following features exist currently:
 
-- 240: Jan 12, 2019
-- 233: Mar 12, 2017
+- 240
+- 233
+- 232
 
-All features are in the default feature set. If required, default-features must be turned off. Features are stacking: if you select feature 240, you will get 233 included.
+All features are in the default feature set. If required, default-features must be turned off. Features are stacking: if you select feature 240, you will get 233 and 232 included.
 
 ### cargo.toml
 

@@ -86,10 +86,11 @@ fn machine_id_hashed() {
     assert_ne!(machine, machine_hashed);
 }
 
-// #[test]
-// fn invocation_id() {
-//     assert!(ID128::invocation_id().is_ok());
-// }
+#[test]
+#[cfg(any(feature = "232", feature = "233", feature = "240"))]
+fn invocation_id() {
+    assert!(ID128::invocation_id().is_err());
+}
 
 #[test]
 fn from_string_lower_libsystemd() {
